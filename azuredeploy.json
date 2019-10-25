@@ -157,6 +157,8 @@
     "AutomationVariable_TagNameDescription": "Azure Subscription Name the Automation Account belongs to",
     "AutomationVariable_TagValue": "StartShutdown_TagValue",
     "AutomationVariable_TagValueDescription": "Azure Tag Name for VMs and Resource Groups",
+    "AutomationVariable_AzureEnvironment": "AzureEnvironment",
+    "AutomationVariable_AzureEnvironmentDescription": "Which Azure Environment is the Automation Account in",
     "AutomationTagNameValue": "AutoStartShutdown",
     "AutomationTagValue":  "True",
     "StartStopVMVersion": "1.0.0.0",
@@ -288,6 +290,19 @@
       "properties": {
         "description": "[variables('AutomationVariable_TagValueDescription')]",
         "value": "[concat('\"',variables('AutomationTagValue'),'\"')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Automation/automationAccounts/',  parameters('accountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Automation/automationAccounts/variables",
+      "name": "[concat(parameters('accountName'), '/', variables('AutomationVariable_AzureEnvironment'))]",
+      "apiVersion": "2015-10-31",
+      "tags": {},
+      "properties": {
+        "description": "[variables('AutomationVariable_AzureEnvironmentDescription')]",
+        "value": "[concat('\"',parameters('AzureEnvironment'),'\"')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Automation/automationAccounts/',  parameters('accountName'))]"
