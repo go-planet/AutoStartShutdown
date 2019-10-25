@@ -2,7 +2,7 @@
 
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
-    [string] $ResourceGroupName = 'AutoStartShutdown',
+    [string] $ResourceGroupName = 'AutoStartShutdown_Demo',
     [switch] $UploadArtifacts,
     [string] $StorageAccountName,
     [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',

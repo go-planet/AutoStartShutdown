@@ -38,7 +38,7 @@
     },
     "Daily Start Time": {
       "type": "String",
-      "defaultValue": "2019-10-25T05:00:00-08:00",
+      "defaultValue": "2019-10-26T05:00:00-08:00",
       "metadata": {
         "description": "Enter time for starting VMs by resource group.  This is a recurring daily schedule. Set a datetime (current time zone) that is at least 30 minutes from now.  Schedule will be reflected as UTC in the automation account.",
         "control": "datetime",
@@ -56,7 +56,7 @@
     },
     "Daily Stop Time": {
       "type": "String",
-      "defaultValue": "2019-10-25T05:00:00-08:00",
+      "defaultValue": "2019-10-26T05:00:00-08:00",
       "metadata": {
         "description": "Enter time for stopping VMs by resource group.  This is a recurring daily schedule. Set a datetime (current time zone) that is at least 30 minutes from now.  Schedule will be reflected as UTC in the automation account.",
         "control": "datetime",
@@ -145,9 +145,12 @@
     "AutomationTagValue":  "True",
     "StartStopVMVersion": "1.0.0.0",
     "sku": "Free",
-    "runbookname": "AutoStartShutdownVMs",
-    "RunbookDescription": "Automatically starts up and shuts down Azure Resource Manager VMs based on the presence of the AutoStartShutdown tag",
-    "scriptUri": "https://raw.githubusercontent.com/kylgrn/AutoStartShutdown/master/AutoStartShutdown.ps1",
+    "StartStoprunbookname": "AutoStartShutdownVMs",
+    "StartStopRunbookDescription": "Automatically starts up and shuts down Azure Resource Manager VMs based on the presence of the AutoStartShutdown tag",
+    "StartStopScriptUri": "https://raw.githubusercontent.com/go-planet/AutoStartShutdown/master/AutoStartShutdown.ps1",
+    "UpdateModulesrunbookname": "Update-AutomationAzureModulesForAccount",
+    "UpdateModulesRunbookDescription": "Updates Powershell modules associated with the Automation Account",
+    "UpdateModulesScriptUri": "https://raw.githubusercontent.com/go-planet/AutoStartShutdown/master/Update-AutomationAzureModulesForAccount.ps1",
     "StartRunbookScheduleInterval": 1,
     "StartRunbookScheduleFrequency": "Day",
     "StopRunbookScheduleInterval": 1,
@@ -170,7 +173,7 @@
       }
     },
     {
-      "name": "[concat(parameters('accountName'), '/', variables('runbookname'))]",
+      "name": "[concat(parameters('accountName'), '/', variables('StartStoprunbookname'))]",
       "type": "Microsoft.Automation/automationAccounts/runbooks",
       "apiVersion": "2015-01-01-preview",
       "location": "[resourceGroup().location]",
@@ -179,11 +182,31 @@
       ],
       "tags": {},
       "properties": {
-        "description": "[variables('runbookDescription')]",
+        "description": "[variables('StartStopRunbookDescription')]",
         "logProgress": "false",
         "logVerbose": "false",
         "publishContentLink": {
-          "uri": "[variables('scriptUri')]",
+          "uri": "[variables('StartStopScriptUri')]",
+          "version": "1.0.0.0"
+        },
+        "runbookType": "PowerShell"
+      }
+    },
+    {
+      "name": "[concat(parameters('accountName'), '/', variables('UpdateModulesrunbookname'))]",
+      "type": "Microsoft.Automation/automationAccounts/runbooks",
+      "apiVersion": "2015-01-01-preview",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "description": "[variables('UpdateModulesRunbookDescription')]",
+        "logProgress": "false",
+        "logVerbose": "false",
+        "publishContentLink": {
+          "uri": "[variables('UpdateModulesScriptUri')]",
           "version": "1.0.0.0"
         },
         "runbookType": "PowerShell"
@@ -328,7 +351,7 @@
         "isenabled": "false"
       },
       "dependsOn": [
-        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'), '/runbooks/', variables('runbookname'))]",
+        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'), '/runbooks/', variables('StartStoprunbookname'))]",
         "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'), '/schedules/Scheduled-StopVM')]",
         "[resourceId('Microsoft.Automation/automationAccounts', parameters('accountName'))]"
       ]
