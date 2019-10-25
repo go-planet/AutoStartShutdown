@@ -35,9 +35,10 @@ try
 {
     # Get the connection "AzureRunAsConnection "
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName      
+    $azureEnvironment = Get-AutomationVariable -Name "AzureEnvironment"
 
     "Logging in to Azure..."
-    Add-AzureRmAccount -ServicePrincipal -TenantId $servicePrincipalConnection.TenantId -ApplicationId $servicePrincipalConnection.ApplicationId -CertificateThumbprint   $servicePrincipalConnection.CertificateThumbprint
+    Add-AzureRmAccount -ServicePrincipal -TenantId $servicePrincipalConnection.TenantId -ApplicationId $servicePrincipalConnection.ApplicationId -CertificateThumbprint   $servicePrincipalConnection.CertificateThumbprint -Environment $azureEnvironment
 }
 catch {
     if (!$servicePrincipalConnection)

@@ -2,6 +2,17 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "AzureEnvironment": {
+      "type": "String",
+      "defaultvalue": "AzureCloud",
+      "allowedValues": [
+        "AzureCloud",
+        "AzureUSGovernment"
+      ],
+      "metadata": {
+        "description": "A valid Azure Automation Account Name"
+      }
+    },
     "accountName": {
       "type": "String",
       "defaultvalue": "Automation-AutoStartShutdownVMs",
@@ -129,6 +140,11 @@
         "name": "StartShutdown_TagValue",
         "description": "Azure Tag Name for VMs and Resource Groups",
         "value": "True"
+      },
+      {
+        "name": "AzureEnvironment",
+        "description": "Which Azure Environment is the script running in",
+        "value": "[parameters('AzureEnvironment')]"
       }
     ],
     "AutomationVariable_AutomationAcctName": "StartShutdown_AutomationAcct",
